@@ -1,11 +1,13 @@
-<link rel="shortcut icon" type="image/png" href="/favicon.png"/>
-<!-- <link rel="shortcut icon" type="image/png" href="http://eg.com/favicon.svg"/> -->
-
+<!DOCTYPE html>
+<html>
+<head>
+<title>random xfm</title>
+<link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+</head>
+<body>
 <div id="player"></div>
 <script>
-    /* Replace This Code - get Value from playlist page and place it here */
     var playlistId = "PLyXWmr6hs7HBMjqtYBH97b7SJoTlbcPEf";
-
     var playlistIds = ["PLyXWmr6hs7HBMjqtYBH97b7SJoTlbcPEf", 'PLyXWmr6hs7HBvJO63tHC8Lyt1KOp2pm8b', 'PLyXWmr6hs7HA-ZREpeUTSxcm76_XVrfiH', 'PLyXWmr6hs7HB4o17q-6Tbo-eJvlkRek_S', 'PLyXWmr6hs7HC_-CluC_IB17TyWR21Xfk3'];
 
     var tag = document.createElement('script');
@@ -45,11 +47,17 @@
         }
     }
 
+function weightedRand(spec) {
+  var i, sum=0, r=Math.random();
+  for (i in spec) {
+    sum += spec[i];
+    if (r <= sum) return i;
+  }
+}
+
 function onPlayerReady(event) {
-
-    playlistId = playlistIds[Math.floor(Math.random() * 5)];
-    console.log(playlistId)
-
+	var randNum = weightedRand({0:0.1, 1:0.23, 2:0.50, 3:0.12, 4:0.06});
+    playlistId = playlistIds[randNum];
     player.loadPlaylist({
         'listType': 'playlist',
         'list': playlistId
@@ -65,12 +73,12 @@ function onPlayerStateChange(event) {
             firstLoad = false;
             playlistArray = player.getPlaylist();
             playListArrayLength = playlistArray.length;
-            console.log(playListArrayLength)
             maxNumber = playListArrayLength;
             NewNumber = newRandomNumber();
             player.playVideoAt(newRandomNumber());
         }
     }
 }    
-    
 </script>
+</body>
+</html>
