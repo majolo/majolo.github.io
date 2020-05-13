@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>random xfm</title>
+<link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+</head>
+<body>
+<div id="player"></div>
+<script>
+    var playlistId = "PLyXWmr6hs7HBMjqtYBH97b7SJoTlbcPEf";
+    var playlistIds = ["PLyXWmr6hs7HBMjqtYBH97b7SJoTlbcPEf", 'PLyXWmr6hs7HBvJO63tHC8Lyt1KOp2pm8b', 'PLyXWmr6hs7HA-ZREpeUTSxcm76_XVrfiH', 'PLyXWmr6hs7HB4o17q-6Tbo-eJvlkRek_S', 'PLyXWmr6hs7HC_-CluC_IB17TyWR21Xfk3'];
+
+    var tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '310',
+            width: '550',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+
+        });
+    }
+
+    var playlistArray;
+    var playListArrayLength;
+    var maxNumber;
+
+    var oldNumber = 0;
+    var NewNumber = 0;
+
+    function newRandomNumber() {
+        oldNumber = NewNumber;
+        NewNumber = Math.floor(Math.random() * maxNumber);
+        if (NewNumber == oldNumber) {
+            newRandomNumber();
+        } else {
+            return NewNumber;
+        }
+    }
+
+function weightedRand(spec) {
+  var i, sum=0, r=Math.random();
+  for (i in spec) {
+    sum += spec[i];
+    if (r <= sum) return i;
+  }
+}
+
+function onPlayerReady(event) {
+	var randNum = weightedRand({0:0.1, 1:0.23, 2:0.50, 3:0.12, 4:0.06});
+    playlistId = playlistIds[randNum];
+    player.loadPlaylist({
+        'listType': 'playlist',
+        'list': playlistId
+    });
+}
+
+var firstLoad = true;
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.ENDED) {
+        player.playVideoAt(newRandomNumber());   
+    } else {
+        if (firstLoad && event.data == YT.PlayerState.PLAYING) {
+            firstLoad = false;
+            playlistArray = player.getPlaylist();
+            playListArrayLength = playlistArray.length;
+            maxNumber = playListArrayLength;
+            NewNumber = newRandomNumber();
+            player.playVideoAt(newRandomNumber());
+        }
+    }
+}    
+</script>
+</body>
+</html>
